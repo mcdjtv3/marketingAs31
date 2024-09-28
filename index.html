@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz : Démarche Marketing & Définition des Marchés</title>
+    <style>
+        body {
+            font-family: 'Mayan', sans-serif;
+            margin: 0;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+            text-align: center;
+        }
+        .quiz-container, .summary {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            background-image: url('images/back.jpg.webp');
+            background-size: cover;
+            background-position: center;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #000;
+        }
+        .choices {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-left: 20%;
+        }
+        .choices li {
+            margin: 8px 0;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #FF0000;
+            color: white;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #CC0000;
+        }
+        .summary {
+            display: none;
+        }
+        .summary ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary li {
+            text-align: left;
+            margin-left: 20%;
+            margin-bottom: 10px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .quiz-container, .summary {
+                max-width: 90%;
+                margin: 20px auto;
+                padding: 15px;
+                border-radius: 10px;
+            }
+            button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .quiz-container, .summary {
+                padding: 10px;
+                margin: 10px;
+                border-radius: 10px;
+            }
+            .question {
+                font-size: 16px;
+            }
+            button {
+                font-size: 12px;
+                padding: 6px 12px;
+                border-radius: 10px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .quiz-container, .summary {
+                max-width: 800px;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="quiz-container" id="quiz-container">
+    <h2>QCM ENTRAINEMENT - Marketing Studies and Retail Panels</h2>
+    <div id="question-container">
+        <!-- Les questions seront affichées ici dynamiquement -->
+    </div>
+    <button id="next-button" onclick="nextQuestion()">Suivant</button>
+</div>
+
+<div class="summary" id="summary">
+    <h3>Récapitulatif</h3>
+    <ul id="summary-list">
+        <!-- Le récapitulatif des réponses sera affiché ici -->
+    </ul>
+    <div class="score" id="score"></div>
+    <button onclick="restartQuiz()">Recommencer</button>
+</div>
+
+<script>
+    const quizData = [
+        { question: "What is the primary function of marketing studies?", choices: ["To create marketing materials for products", "To connect the customer to the marketer with information for decision-making", "To manage sales teams across regions", "To reduce production costs"], correct: 1 },
+        { question: "Which of the following is not a step in the 4-step market research approach?", choices: ["Define the marketing issue", "Collect data", "Establish a sales team", "Interpret and present the results"], correct: 2 },
+        { question: "What are primary data in marketing research?", choices: ["Data collected for a study, ad hoc or multi-brand, and recent", "Existing data from past research", "Data collected by competitors", "Data related to competitor performance"], correct: 0 },
+        { question: "What is the purpose of a research brief in marketing studies?", choices: ["To finalize marketing campaigns", "To outline the marketing context and define uncertainties for the study", "To provide customer feedback", "To plan product distribution channels"], correct: 1 },
+        { question: "What is the key difference between primary and secondary data?", choices: ["Primary data is cheaper to obtain", "Secondary data is collected specifically for the current study", "Primary data is collected for the study, while secondary data already exists and is faster and inexpensive", "Secondary data is always more reliable than primary data"], correct: 2 },
+        { question: "What is a retail panel in marketing studies?", choices: ["A survey of customers in stores", "A group of outlets that provide recurrent sales data, typically scanned from checkouts", "A customer feedback program for new products", "A loyalty program offered by retailers"], correct: 1 },
+        { question: "Which metric represents the percentage of shops that sell a particular product?", choices: ["Weighted distribution (WD %)", "Numerical distribution (ND %)", "Market share", "Sales volume"], correct: 1 },
+        { question: "How is demand in marketing panels typically measured?", choices: ["By counting the number of products in stock", "Sales divided by weighted distribution (Sales / WD %)", "By measuring store traffic", "Through customer surveys"], correct: 1 },
+        { question: "What is the role of Key Performance Indicators (KPIs) in retail management?", choices: ["To track store layouts", "To measure performance and identify consumer habits and sales barriers", "To reduce the size of retail locations", "To increase the number of SKUs"], correct: 1 },
+        { question: "What does a higher WD % compared to ND % suggest in distribution analysis?", choices: ["Poor sales performance", "A product is underperforming in larger stores", "Stronger presence in high-value stores", "Lower coverage in smaller shops"], correct: 2 },
+        { question: "What type of sales data comes from external sources such as stores?", choices: ["Sell-in data", "Customer feedback", "Sell-out data", "Stock levels"], correct: 2 },
+        { question: "What is the focus of demand analysis in panel data?", choices: ["The volume of promotions conducted", "Consumer preferences excluding promotional activities", "The price of competing products", "The frequency of product restocking"], correct: 1 },
+        { question: "What is a household panel in marketing research?", choices: ["A focus group for product testing", "A panel that collects data from households using in-home scanning", "A group of households involved in marketing strategy planning", "A list of key retailers for market analysis"], correct: 1 },
+        { question: "Which of the following is not a typical promotional activity measured by panels?", choices: ["Shelf space allocation", "Out-of-shelf displays", "Price reductions", "Loyalty card offers"], correct: 0 },
+        { question: "How is moving annual total sales (MAT sales) calculated?", choices: ["By adding the total sales of the past year", "By adding weekly and monthly sales", "By using sales forecasts for the next 12 months", "By taking the sales from the last 12 months and updating with new monthly data"], correct: 3 },
+        { question: "What is a critical factor in ensuring the reliability of collected data?", choices: ["Choosing only favorable sources", "Cross-checking multiple sources and eliminating questionable data points", "Reducing the amount of data collected", "Limiting the study to internal data only"], correct: 1 },
+        { question: "What does the coverage rate assess in a retail panel?", choices: ["How well products are promoted", "The number of new products launched", "How well the products shipped are sold in stores", "The size of the store"], correct: 2 },
+        { question: "What are secondary data in marketing studies?", choices: ["Data collected specifically for a new study", "Data that already exists and is reused for analysis", "Data collected from primary surveys", "Information generated by new product tests"], correct: 1 },
+        { question: "What is promotional efficacy in the context of panel data?", choices: ["The total sales generated by promotional activities", "The effectiveness of promotions based on consumer response", "The cost of conducting promotions", "The total number of promotions conducted"], correct: 1 },
+        { question: "What is the role of panel firms like Nielsen, Kantar, and GFK?", choices: ["They manage the collection of sales data and sell consolidated data to clients", "They promote products on behalf of retailers", "They develop new product lines for retailers", "They regulate market competition"], correct: 0 }
+    ];
+
+    let currentQuestionIndex = 0;
+    let selectedAnswers = [];
+
+    function loadQuestion() {
+        const container = document.getElementById('question-container');
+        container.innerHTML = '';
+
+        const questionData = quizData[currentQuestionIndex];
+        const questionElem = document.createElement('div');
+        questionElem.className = 'question';
+        questionElem.textContent = questionData.question;
+
+        const choicesElem = document.createElement('ul');
+        choicesElem.className = 'choices';
+
+        questionData.choices.forEach((choice, index) => {
+            const choiceElem = document.createElement('li');
+            const choiceInput = document.createElement('input');
+            choiceInput.type = 'radio';
+            choiceInput.name = 'choice';
+            choiceInput.value = index;
+            choiceInput.id = `choice${index}`;
+            
+            const choiceLabel = document.createElement('label');
+            choiceLabel.htmlFor = `choice${index}`;
+            choiceLabel.textContent = choice;
+
+            choiceElem.appendChild(choiceInput);
+            choiceElem.appendChild(choiceLabel);
+            choicesElem.appendChild(choiceElem);
+        });
+
+        container.appendChild(questionElem);
+        container.appendChild(choicesElem);
+    }
+
+    function nextQuestion() {
+        const selectedChoice = document.querySelector('input[name="choice"]:checked');
+        if (!selectedChoice) {
+            alert("Veuillez sélectionner une réponse !");
+            return;
+        }
+
+        selectedAnswers.push(parseInt(selectedChoice.value));
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < quizData.length) {
+            loadQuestion();
+        } else {
+            showSummary();
+        }
+    }
+
+    function showSummary() {
+        document.getElementById('quiz-container').style.display = 'none';
+        const summary = document.getElementById('summary');
+        summary.style.display = 'block';
+
+        const summaryList = document.getElementById('summary-list');
+        summaryList.innerHTML = '';
+
+        let correctAnswers = 0;
+
+        quizData.forEach((q, index) => {
+            const summaryItem = document.createElement('li');
+            summaryItem.innerHTML = `
+                <strong>${q.question}</strong><br>
+                <div style="text-align: left; margin-left: 20%;">
+                    Votre réponse: ${q.choices[selectedAnswers[index]]} - 
+                    ${selectedAnswers[index] === q.correct ? '<span class="correct">Correct</span>' : '<span class="incorrect">Incorrect</span>'}<br>
+                    Bonne réponse: ${q.choices[q.correct]}
+                </div>
+            `;
+            summaryList.appendChild(summaryItem);
+            if (selectedAnswers[index] === q.correct) {
+                correctAnswers++;
+            }
+        });
+
+        document.getElementById('score').textContent = `Score: ${correctAnswers} / ${quizData.length}`;
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        selectedAnswers = [];
+        document.getElementById('summary').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+        loadQuestion();
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+
+
+</html>
